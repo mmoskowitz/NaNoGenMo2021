@@ -106,10 +106,27 @@ def is_contiguous(grid):
 def fill_grid(grid):
     filler = copy.deepcopy(basefiller)
     filler.set_grid(grid)
-    filler.fill()
+    success = filler.fill()
+    if (success):
+        handle_filled(filler)
+    else:
+        print "FAILED"
+        filler.printgrid()
+        print "FAILED TO FILL"
+
+def handle_filled(filler):
     print "Success!"
     filler.printgrid()
-
+    entries = {}
+    entries[0] = {}
+    entries[1] = {}
+    for entry in filler.entrylist:
+        entries[entry[0]][entry[1]] = entry[2]
+    for dir in (1, 0):
+        print dir
+        for num in range(33):
+            if (num in entries[dir]):
+                print num, entries[dir][num]
         
 iterate_across(basegrid, 0)
 
