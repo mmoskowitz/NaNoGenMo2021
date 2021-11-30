@@ -1,0 +1,354 @@
+%!PS-Adobe-3.0
+%%Pages: 1
+%%EndComments
+%%BeginProlog
+
+%%BeginResource: procs
+
+/inch {72 mul} def
+/squaresize .25 inch def
+/lightfont 12 def
+/fontname /Courier def
+/numfont 7 def
+
+/tostring {
+    /tsdata exch def
+    tsdata 0 eq {
+	(0)
+    } {
+	tsdata cvi tsdata ne
+	tsdata 4 mul tsdata 4 mul cvi eq and { %1/4, 1/2, 3/4
+	    /tsrem tsdata 4 mul cvi 4 mod def
+	    /tsival tsdata cvi tostring def
+	    /ts4val tsival length 1 add string def
+	    ts4val 0 tsival putinterval
+	    ts4val tsival length 187 tsrem add put
+	    ts4val
+	} {
+	    /tsval tsdata abs log 4 add cvi string def %basic case
+	    tsdata tsval cvs
+	} ifelse
+    } ifelse
+} def
+
+/centershow {
+    dup stringwidth pop -2 div 0 rmoveto show
+} def
+
+/drawgrid { % draw grid.
+    newpath
+    0 0 moveto
+    squares length 1 add {
+	squaresize squares 0 get length mul 0 rlineto
+	squaresize squares 0 get length mul -1 mul squaresize -1 mul rmoveto
+    } repeat
+    stroke
+
+    newpath
+    0 0 moveto
+    squares 0 get length 1 add {
+	0 squaresize squares length mul -1 mul rlineto
+	squaresize squaresize squares length mul rmoveto
+    } repeat
+    stroke
+
+    0 1 squares length 1 sub {
+	/sqy exch def
+	/squareline squares sqy get def
+	0 1 squareline length 1 sub {
+	    /sqx exch def
+	    squareline sqx get 0 le {
+		newpath
+		squaresize sqx mul squaresize sqy mul -1 mul moveto
+		squaresize 0 rlineto
+		0 squaresize -1 mul rlineto
+		squaresize -1 mul 0 rlineto
+		closepath
+		fill
+	    } if
+	} for
+    } for
+} def
+
+/drawnums { %draw grid numbers
+    /currentnum 1 def
+    fontname numfont selectfont
+    0 1 squares length 1 sub {
+	/sqy exch def
+	/squareline squares sqy get def
+	0 1 squareline length 1 sub {
+	    /sqx exch def
+	    squareline sqx get 0 gt {
+		sqx sqy coordcheck {
+		    newpath
+		    squaresize sqx mul squaresize sqy mul -1 mul moveto
+		    squaresize 15 div dup -1 mul rmoveto
+		    0 numfont -.75  mul rmoveto
+		    currentnum tostring show
+		    /currentnum currentnum 1 add def
+		} if
+	    } if
+	} for
+    } for
+    
+} def
+
+/coordcheck { %check whether to draw a number at x, y
+    /y exch def
+    /x exch def
+    x y acoordcheck
+    x y dcoordcheck or
+} def
+
+/acoordcheck { %check whether to draw a number for an across clue.
+    /ay exch def
+    /ax exch def
+    ax 1 sub ay isopen not
+    ax 1 add ay isopen and
+} def
+
+/dcoordcheck {
+    /dy exch def
+    /dx exch def
+    dx dy 1 sub isopen not
+    dx dy 1 add isopen and
+} def
+
+/isopen{ %check whether a square is open
+    /iy exch def
+    /ix exch def
+    iy 0 ge
+    ix 0 ge and {
+	iy squares length lt {
+	    ix squares iy get length lt {
+		squares iy get ix get 0 gt
+	    } {
+		false
+	    } ifelse
+	} {
+	    false
+	} ifelse
+    } {
+	false
+    } ifelse
+} def
+
+/currentsize lightfont def
+
+/choosefont {
+    /currentsize exch def
+    fontname currentsize selectfont
+} def
+
+/wl {
+    /linestr exch def
+    0 currentsize -1 mul rmoveto
+    gsave
+    linestr show
+    grestore
+    0 currentsize -0.25 mul rmoveto
+} def
+
+/drawentries {
+    /across entries 0 get def
+    /down entries 1 get def
+    lightfont 1.2 mul choosefont
+    (Across ) wl
+    lightfont .9 mul choosefont
+    0 1 15 {
+	across exch get wl
+    } for
+    1.5 inch 0 moveto
+    lightfont 1.5 mul choosefont
+    () wl
+    lightfont 1.2 mul choosefont
+    (Down ) wl
+    lightfont .9 mul choosefont
+    0 1 15 {
+	down exch get wl
+    } for
+} def
+
+/drawitem {
+    gsave
+    7.25 inch 0 translate
+    squaresize squares 0 get length mul -1 mul 0 translate
+    drawgrid
+    drawnums
+    grestore
+    gsave
+    0 0 moveto
+    lightfont 1.5 mul choosefont
+    title wl
+    drawentries
+    grestore    
+} def
+
+/drawpagenum {
+    gsave
+        4.25 inch .75 inch translate
+	0 0 moveto
+	lightfont 1.2 mul choosefont
+	pagenum wl
+    grestore
+} def
+
+/drawheader {
+    gsave
+        .5 inch 10.75 inch translate
+	0 0 moveto
+	lightfont 1.5 mul choosefont
+	(Reference Settings for All 15x15 Contiguous Grids ) wl
+	(with Word Lengths of 5, 7, and 9 Letters) wl
+	volumetitle wl
+    grestore
+} def
+
+/drawpage {
+    gsave
+    drawheader
+    drawpagenum
+    
+    .5 inch 9.5 inch translate
+    /squares squares0 def
+    /title title0 def
+    /entries entries0 def
+    drawitem
+    0 -4.5 inch translate
+    /squares squares1 def
+    /title title1 def
+    /entries entries1 def
+    drawitem
+    grestore
+    showpage
+} def
+
+%%EndResource
+
+%%EndProlog
+
+%%Page: 1 1
+
+    /pagenum (1) def
+    /volumetitle (Volume III: 1-Across Entries of 9 Letters) def
+
+
+    /squares0 [
+	[ 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 ]
+	[ 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 ]
+	[ 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 ]
+	[ 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 ]
+	[ 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 ]
+	[ 1 0 1 0 0 0 1 0 1 0 1 0 0 0 1 ]
+	[ 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 ]
+	[ 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 ]
+	[ 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 ]
+	[ 1 0 0 0 1 0 1 0 1 0 0 0 1 0 1 ]
+	[ 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 ]
+	[ 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 ]
+	[ 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 ]
+	[ 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 ]
+	[ 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 ]
+    ] def
+    
+    /title0 (#6121: 9-9-9-9-5-5-5-5) def
+    
+    /entries0 [
+	[
+	    (1. DISBELIEF)
+	    (6. COMES)
+	    (9. OVERDRAWN)
+	    (10. ASHEN)
+	    (11. PIECEMEAL)
+	    (12. LARGE)
+	    (13. DISTRACTS)
+	    (17. NISEI)
+	    (18. MAGIC)
+	    (19. LEDGERING)
+	    (20. CHERI)
+	    (21. BUNDESTAG)
+	    (26. ALTAI)
+	    (27. ARMADILLO)
+	    (28. SHRUG)
+	    (29. ENDLESSLY)	
+	][
+	    (1. DISBELIEF)
+	    (7. COMES)
+	    (9. OVERDRAWN)
+	    (10. ASHEN)
+	    (11. PIECEMEAL)
+	    (12. LARGE)
+	    (13. DISTRACTS)
+	    (17. NISEI)
+	    (18. MAGIC)
+	    (19. LEDGERING)
+	    (20. CHERI)
+	    (21. BUNDESTAG)
+	    (26. ALTAI)
+	    (27. ARMADILLO)
+	    (28. SHRUG)
+	    (29. ENDLESSLY)	
+	]
+    ] def
+
+    /squares1 [
+	[ 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 ]
+	[ 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 ]
+	[ 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 ]
+	[ 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 ]
+	[ 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 ]
+	[ 1 0 1 0 0 0 1 0 1 0 1 0 0 0 1 ]
+	[ 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 ]
+	[ 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 ]
+	[ 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 ]
+	[ 1 0 0 0 1 0 1 0 1 0 0 0 1 0 1 ]
+	[ 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 ]
+	[ 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 ]
+	[ 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 ]
+	[ 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 ]
+	[ 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 ]
+    ] def
+    
+    /title1 (#6122: 9-9-9-9-5-5-5-7) def
+    
+    /entries1 [
+	[
+	    (1. DISBELIEF)
+	    (6. COMES)
+	    (9. OVERDRAWN)
+	    (10. ASHEN)
+	    (11. PIECEMEAL)
+	    (12. LARGE)
+	    (13. DISTRACTS)
+	    (17. NISEI)
+	    (18. MAGIC)
+	    (19. LEDGERING)
+	    (20. CHERI)
+	    (21. BUNDESTAG)
+	    (26. ALTAI)
+	    (27. ARMADILLO)
+	    (28. SHRUG)
+	    (29. ENDLESSLY)	
+	][
+	    (1. DISBELIEF)
+	    (7. COMES)
+	    (9. OVERDRAWN)
+	    (10. ASHEN)
+	    (11. PIECEMEAL)
+	    (12. LARGE)
+	    (13. DISTRACTS)
+	    (17. NISEI)
+	    (18. MAGIC)
+	    (19. LEDGERING)
+	    (20. CHERI)
+	    (21. BUNDESTAG)
+	    (26. ALTAI)
+	    (27. ARMADILLO)
+	    (28. SHRUG)
+	    (29. ENDLESSLY)	
+	]
+    ] def
+
+    drawpage
+
+%%EOF
