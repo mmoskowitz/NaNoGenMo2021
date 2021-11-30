@@ -150,18 +150,19 @@
 /drawentries {
     /across entries 0 get def
     /down entries 1 get def
-    lightfont 1.2 mul choosefont
+    lightfont choosefont
     (Across ) wl
-    lightfont .9 mul choosefont
+    gsave
+    (______) show
+    grestore
     0 1 15 {
 	across exch get wl
     } for
     1.5 inch 0 moveto
-    lightfont 1.5 mul choosefont
-    () wl
-    lightfont 1.2 mul choosefont
     (Down ) wl
-    lightfont .9 mul choosefont
+    gsave
+    (____) show
+    grestore
     0 1 15 {
 	down exch get wl
     } for
@@ -175,9 +176,10 @@
     drawnums
     grestore
     gsave
-    0 0 moveto
-    lightfont 1.5 mul choosefont
+    0 .5 inch moveto
+    lightfont choosefont
     title wl
+    0 0 moveto
     drawentries
     grestore    
 } def
@@ -186,21 +188,59 @@
     gsave
         4.25 inch .75 inch translate
 	0 0 moveto
-	lightfont 1.2 mul choosefont
+	lightfont choosefont
 	pagenum wl
     grestore
 } def
 
 /drawheader {
     gsave
-        .5 inch 10.75 inch translate
+        .5 inch 10.5 inch translate
 	0 0 moveto
-	lightfont 1.5 mul choosefont
-	(Reference Settings for all 15x15 Contiguous Grids ) wl
-	(with Word Lengths of 5, 7, and 9 Letters) wl
-	volumetitle wl
+	lightfont choosefont
+	recto {
+	    0 currentsize -1 mul rmoveto
+	    gsave
+	    (with Word Lengths of 5, 7, and 9 Letters: ) show
+	    volumetitle show
+	    grestore
+	    0 currentsize -0.25 mul rmoveto
+	} {
+	    (Reference Settings for all 15x15 Contiguous Black-Square Cryptic Grids ) wl
+	} ifelse
     grestore
 } def
+
+/drawtitlepage {
+    gsave
+    drawpagenum
+    4.25 inch 7 inch translate
+    0 0 moveto
+    lightfont choosefont
+    (Reference Settings) centershow
+    0 -.5 inch moveto
+    (for all 15x15 Contiguous Black-Square Cryptic Grids) centershow
+    0 -1 inch moveto
+    (with Word Lengths of 5, 7, and 9 Letters) centershow
+    0 -1.5 inch moveto
+    volumetitle centershow
+    grestore
+    showpage
+} def
+
+/drawblankpage {
+    gsave
+    drawheader
+    drawpagenum
+    
+    .5 inch 1.5 inch translate
+    0 0 moveto
+    lightfont choosefont
+    ((This page intentionally left blank)) wl
+    grestore
+    showpage
+} def
+
 
 /drawhalfpage {
     gsave

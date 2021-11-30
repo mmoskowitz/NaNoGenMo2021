@@ -100,7 +100,7 @@ class LayerOut:
             self.volume = "II"
         if (across1len == "9"):
             self.volume = "III"
-        self.title = "Volume {}: 1-Across Entries of {} Letters".format(self.volume, across1len)
+        self.title = "Volume {}: 1-Across Length = {}".format(self.volume, across1len)
 
     def writepages(self):
         filename = "target/vol{}.ps".format(self.volume)
@@ -110,16 +110,38 @@ class LayerOut:
 
         #prolog
         f.write("%!PS-Adobe-3.0\n")
-        f.write("%%Pages: {}\n".format(pages))
+        f.write("%%Pages: {}\n".format(pages + 2))
         for line in self.include:
             f.write(line)
-
+            
+        #setup
+        f.write("%%BeginSetup\n")
+        f.write("/volumetitle ({}) def\n".format(self.title))
+        f.write("%%EndSetup\n")
+            
         #pages
+        #title page
+        f.write("\n");
+        f.write("%%Page: {} {}\n".format(1, 1))
+        f.write("/pagenum ({}) def\n".format(1, 1))
+        f.write("drawtitlepage\n")
+
+        #blank page
+        f.write("\n");
+        f.write("%%Page: {} {}\n".format(2, 2))
+        f.write("/pagenum ({}) def\n".format(2))
+        f.write("/recto false def\n")
+        f.write("drawblankpage\n")
+
+        #grids
         for page in range(pages):
             f.write("\n");
-            f.write("%%Page: {} {}\n".format(page + 1, page + 1))
-            f.write("/pagenum ({}) def\n".format(page+1))
-            f.write("/volumetitle ({}) def\n".format(self.title))
+            f.write("%%Page: {} {}\n".format(page + 3, page + 3))
+            f.write("/pagenum ({}) def\n".format(page+3))
+            if (page  % 2 == 0):
+                f.write("/recto true def\n")
+            else:
+                f.write("/recto false def\n")
             even = len(self.grids) > page*2 + 1
             pagegrids = [self.grids[page*2]]
             if (even):
@@ -139,7 +161,7 @@ class LayerOut:
                 f.write("] def\n")
                 
                 #title
-                f.write("/title{} (#{}: {}) def\n".format(i, grid["number"], grid["code"]))
+                f.write("/title{} (Grid #{}: {}) def\n".format(i, grid["number"], grid["code"]))
                 
                 #entries
                 f.write("/entries{} [\n".format(i))
